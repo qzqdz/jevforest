@@ -1,0 +1,69 @@
+{
+  "dataset_id": "cube_without_noise",
+  "dataset_hash": "8ad1b47025d0004f",
+  "split_seed": 0,
+  "budget_schedule": [
+    1,
+    2,
+    3
+  ],
+  "git_commit": null,
+  "config_path": "configs/eval_cube_forest.json",
+  "policy_name": "ig_forest",
+  "curve": [
+    {
+      "budget": 1,
+      "accuracy": 0.6883116883116883,
+      "f1": 0.668103448275862,
+      "n_episodes": 77
+    },
+    {
+      "budget": 2,
+      "accuracy": 0.9090909090909091,
+      "f1": 0.8836606950140298,
+      "n_episodes": 77
+    },
+    {
+      "budget": 3,
+      "accuracy": 1.0,
+      "f1": 1.0,
+      "n_episodes": 77
+    }
+  ],
+  "predictor_name": "match_majority",
+  "data_provenance": {
+    "loader": "cube",
+    "n_samples": 256,
+    "n_features": 5
+  },
+  "n_train": 179,
+  "n_test": 77,
+  "n_features": 5,
+  "provenance": {
+    "git_commit": null,
+    "git_dirty": true,
+    "python_version": "3.13.12",
+    "python_implementation": "CPython",
+    "numpy_version": "2.5.3",
+    "dependency_versions": {
+      "numpy": "2.5.3",
+      "pytest": "9.1.1"
+    },
+    "predictor_name": "match_majority",
+    "policy_name": "ig_forest",
+    "dataset_hash": "8ad1b47025d0004f",
+    "split_seed": 0,
+    "budgets": [
+      1,
+      2,
+      3
+    ],
+    "config_path": "configs/eval_cube_forest.json",
+    "jevforest_version": "0.1.0",
+    "jevtree_version": "0.1.0",
+    "n_estimators": 16,
+    "max_features": "all",
+    "vote_rule": "ig_weighted"
+  },
+  "git_dirty": true
+}

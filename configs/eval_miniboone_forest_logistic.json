@@ -1,0 +1,28 @@
+{
+  "dataset_id": "miniboone",
+  "n_train": 2000,
+  "n_test": 500,
+  "split_seed": 0,
+  "hard_budgets": [5, 10, 20, 40],
+  "allow_fallback": true,
+  "cache_dir": "data/cache",
+  "policy": {
+    "name": "ig_forest",
+    "n_estimators": 16,
+    "max_features": "sqrt",
+    "max_depth": 8,
+    "min_samples": 8,
+    "criterion": "gain",
+    "n_bins": 4,
+    "seed": 0,
+    "bootstrap": true,
+    "force_acquisition": true,
+    "vote": "ig_weighted"
+  },
+  "predictor": {
+    "name": "logistic_impute"
+  },
+  "output": {
+    "results_dir": "results/"
+  }
+}

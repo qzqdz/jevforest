@@ -1,0 +1,134 @@
+{
+  "dataset": "miniboone",
+  "mode": "prefix",
+  "vote": "ig_weighted",
+  "n_estimators": 16,
+  "max_features": "sqrt",
+  "max_depth": 8,
+  "min_samples": 8,
+  "predictor": "logistic_impute",
+  "seeds": [
+    0
+  ],
+  "budgets": [
+    5,
+    10,
+    20,
+    40
+  ],
+  "tag": "r2_ig_sqrt",
+  "elapsed_sec": 2.228,
+  "created_utc": "2026-09-28T16:59:03.766008+00:00",
+  "aggregate": [
+    {
+      "budget": 5,
+      "acc_mean": 0.798,
+      "acc_std": 0.0,
+      "acc_min": 0.798,
+      "acc_max": 0.798,
+      "f1_mean": 0.6593339134775599,
+      "f1_std": 0.0,
+      "seeds": [
+        0.798
+      ]
+    },
+    {
+      "budget": 10,
+      "acc_mean": 0.856,
+      "acc_std": 0.0,
+      "acc_min": 0.856,
+      "acc_max": 0.856,
+      "f1_mean": 0.7967250141163185,
+      "f1_std": 0.0,
+      "seeds": [
+        0.856
+      ]
+    },
+    {
+      "budget": 20,
+      "acc_mean": 0.878,
+      "acc_std": 0.0,
+      "acc_min": 0.878,
+      "acc_max": 0.878,
+      "f1_mean": 0.8402731590826966,
+      "f1_std": 0.0,
+      "seeds": [
+        0.878
+      ]
+    },
+    {
+      "budget": 40,
+      "acc_mean": 0.894,
+      "acc_std": 0.0,
+      "acc_min": 0.894,
+      "acc_max": 0.894,
+      "f1_mean": 0.8664792337419573,
+      "f1_std": 0.0,
+      "seeds": [
+        0.894
+      ]
+    }
+  ],
+  "per_seed": [
+    {
+      "seed": 0,
+      "n_train": 2000,
+      "n_test": 500,
+      "n_features": 50,
+      "dataset_id": "miniboone",
+      "dataset_hash": "2fcc1077cb6255bb",
+      "fallback_used": false,
+      "elapsed_sec": 2.228,
+      "curve": [
+        {
+          "budget": 5,
+          "accuracy": 0.798,
+          "f1": 0.6593339134775599,
+          "n_episodes": 500,
+          "bootstrap": {
+            "mean": 0.798,
+            "boot_std": 0.017703121207868967,
+            "ci95_lo": 0.762,
+            "ci95_hi": 0.834
+          }
+        },
+        {
+          "budget": 10,
+          "accuracy": 0.856,
+          "f1": 0.7967250141163185,
+          "n_episodes": 500,
+          "bootstrap": {
+            "mean": 0.856,
+            "boot_std": 0.015600708897935328,
+            "ci95_lo": 0.826,
+            "ci95_hi": 0.886
+          }
+        },
+        {
+          "budget": 20,
+          "accuracy": 0.878,
+          "f1": 0.8402731590826966,
+          "n_episodes": 500,
+          "bootstrap": {
+            "mean": 0.878,
+            "boot_std": 0.014483820112285481,
+            "ci95_lo": 0.848,
+            "ci95_hi": 0.906
+          }
+        },
+        {
+          "budget": 40,
+          "accuracy": 0.894,
+          "f1": 0.8664792337419573,
+          "n_episodes": 500,
+          "bootstrap": {
+            "mean": 0.894,
+            "boot_std": 0.013945435783050294,
+            "ci95_lo": 0.866,
+            "ci95_hi": 0.922
+          }
+        }
+      ]
+    }
+  ]
+}

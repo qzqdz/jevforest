@@ -1,0 +1,264 @@
+{
+  "dataset": "miniboone",
+  "mode": "prefix",
+  "vote": "plurality",
+  "n_estimators": 16,
+  "max_features": "sqrt",
+  "max_depth": 8,
+  "min_samples": 8,
+  "predictor": "logistic_impute",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "budgets": [
+    5,
+    10,
+    20,
+    40
+  ],
+  "tag": "round1_baseline",
+  "elapsed_sec": 6.299,
+  "created_utc": "2026-09-28T16:56:08.984530+00:00",
+  "aggregate": [
+    {
+      "budget": 5,
+      "acc_mean": 0.7793333333333333,
+      "acc_std": 0.01171893055416464,
+      "acc_min": 0.766,
+      "acc_max": 0.788,
+      "f1_mean": 0.6019144242224801,
+      "f1_std": 0.024172524217466806,
+      "seeds": [
+        0.784,
+        0.766,
+        0.788
+      ]
+    },
+    {
+      "budget": 10,
+      "acc_mean": 0.81,
+      "acc_std": 0.013114877048603953,
+      "acc_min": 0.798,
+      "acc_max": 0.824,
+      "f1_mean": 0.6855087258923062,
+      "f1_std": 0.0607834400105629,
+      "seeds": [
+        0.808,
+        0.824,
+        0.798
+      ]
+    },
+    {
+      "budget": 20,
+      "acc_mean": 0.8606666666666666,
+      "acc_std": 0.020033305601755643,
+      "acc_min": 0.838,
+      "acc_max": 0.876,
+      "f1_mean": 0.8047787492951861,
+      "f1_std": 0.02458708329636092,
+      "seeds": [
+        0.876,
+        0.838,
+        0.868
+      ]
+    },
+    {
+      "budget": 40,
+      "acc_mean": 0.8853333333333334,
+      "acc_std": 0.008082903768654767,
+      "acc_min": 0.878,
+      "acc_max": 0.894,
+      "f1_mean": 0.8500146576305019,
+      "f1_std": 0.014964912520053568,
+      "seeds": [
+        0.894,
+        0.878,
+        0.884
+      ]
+    }
+  ],
+  "per_seed": [
+    {
+      "seed": 0,
+      "n_train": 2000,
+      "n_test": 500,
+      "n_features": 50,
+      "dataset_id": "miniboone",
+      "dataset_hash": "2fcc1077cb6255bb",
+      "fallback_used": false,
+      "elapsed_sec": 2.164,
+      "curve": [
+        {
+          "budget": 5,
+          "accuracy": 0.784,
+          "f1": 0.6276478375992939,
+          "n_episodes": 500,
+          "bootstrap": {
+            "mean": 0.784,
+            "boot_std": 0.01813766729695346,
+            "ci95_lo": 0.75,
+            "ci95_hi": 0.822
+          }
+        },
+        {
+          "budget": 10,
+          "accuracy": 0.808,
+          "f1": 0.6905940594059405,
+          "n_episodes": 500,
+          "bootstrap": {
+            "mean": 0.808,
+            "boot_std": 0.017340556476044763,
+            "ci95_lo": 0.776,
+            "ci95_hi": 0.842
+          }
+        },
+        {
+          "budget": 20,
+          "accuracy": 0.876,
+          "f1": 0.8310037288209511,
+          "n_episodes": 500,
+          "bootstrap": {
+            "mean": 0.876,
+            "boot_std": 0.014388817674641459,
+            "ci95_lo": 0.848,
+            "ci95_hi": 0.904
+          }
+        },
+        {
+          "budget": 40,
+          "accuracy": 0.894,
+          "f1": 0.8664792337419573,
+          "n_episodes": 500,
+          "bootstrap": {
+            "mean": 0.894,
+            "boot_std": 0.013945435783050294,
+            "ci95_lo": 0.866,
+            "ci95_hi": 0.922
+          }
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "n_train": 2000,
+      "n_test": 500,
+      "n_features": 50,
+      "dataset_id": "miniboone",
+      "dataset_hash": "64d5fbd5c54f9d95",
+      "fallback_used": false,
+      "elapsed_sec": 2.031,
+      "curve": [
+        {
+          "budget": 5,
+          "accuracy": 0.766,
+          "f1": 0.5984101159462075,
+          "n_episodes": 500,
+          "bootstrap": {
+            "mean": 0.766,
+            "boot_std": 0.018675930669885956,
+            "ci95_lo": 0.73,
+            "ci95_hi": 0.802
+          }
+        },
+        {
+          "budget": 10,
+          "accuracy": 0.824,
+          "f1": 0.7435897435897436,
+          "n_episodes": 500,
+          "bootstrap": {
+            "mean": 0.824,
+            "boot_std": 0.016563940960415774,
+            "ci95_lo": 0.792,
+            "ci95_hi": 0.856
+          }
+        },
+        {
+          "budget": 20,
+          "accuracy": 0.838,
+          "f1": 0.7822475281061987,
+          "n_episodes": 500,
+          "bootstrap": {
+            "mean": 0.838,
+            "boot_std": 0.016602265966886427,
+            "ci95_lo": 0.804,
+            "ci95_hi": 0.872
+          }
+        },
+        {
+          "budget": 40,
+          "accuracy": 0.878,
+          "f1": 0.8463251558162149,
+          "n_episodes": 500,
+          "bootstrap": {
+            "mean": 0.878,
+            "boot_std": 0.014926012255181966,
+            "ci95_lo": 0.85,
+            "ci95_hi": 0.906
+          }
+        }
+      ]
+    },
+    {
+      "seed": 2,
+      "n_train": 2000,
+      "n_test": 500,
+      "n_features": 50,
+      "dataset_id": "miniboone",
+      "dataset_hash": "8e7fa4816eb4a00c",
+      "fallback_used": false,
+      "elapsed_sec": 2.103,
+      "curve": [
+        {
+          "budget": 5,
+          "accuracy": 0.788,
+          "f1": 0.5796853191219389,
+          "n_episodes": 500,
+          "bootstrap": {
+            "mean": 0.788,
+            "boot_std": 0.01884194838701717,
+            "ci95_lo": 0.75,
+            "ci95_hi": 0.824
+          }
+        },
+        {
+          "budget": 10,
+          "accuracy": 0.798,
+          "f1": 0.6223423746812344,
+          "n_episodes": 500,
+          "bootstrap": {
+            "mean": 0.798,
+            "boot_std": 0.01872561594962078,
+            "ci95_lo": 0.762,
+            "ci95_hi": 0.834
+          }
+        },
+        {
+          "budget": 20,
+          "accuracy": 0.868,
+          "f1": 0.8010849909584087,
+          "n_episodes": 500,
+          "bootstrap": {
+            "mean": 0.868,
+            "boot_std": 0.015161110225285735,
+            "ci95_lo": 0.84,
+            "ci95_hi": 0.896
+          }
+        },
+        {
+          "budget": 40,
+          "accuracy": 0.884,
+          "f1": 0.8372395833333334,
+          "n_episodes": 500,
+          "bootstrap": {
+            "mean": 0.884,
+            "boot_std": 0.014219040935489478,
+            "ci95_lo": 0.854,
+            "ci95_hi": 0.912
+          }
+        }
+      ]
+    }
+  ]
+}

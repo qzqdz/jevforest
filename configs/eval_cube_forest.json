@@ -1,0 +1,26 @@
+{
+  "dataset_id": "cube_without_noise",
+  "n_samples": 256,
+  "n_features": 5,
+  "split_seed": 0,
+  "hard_budgets": [1, 2, 3],
+  "policy": {
+    "name": "ig_forest",
+    "n_estimators": 16,
+    "max_features": "all",
+    "max_depth": 6,
+    "min_samples": 1,
+    "criterion": "gain",
+    "n_bins": 4,
+    "seed": 0,
+    "bootstrap": true,
+    "force_acquisition": true,
+    "vote": "ig_weighted"
+  },
+  "predictor": {
+    "name": "match_majority"
+  },
+  "output": {
+    "results_dir": "results/"
+  }
+}
