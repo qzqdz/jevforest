@@ -6,123 +6,95 @@
 [![pytest](https://img.shields.io/badge/tests-pytest-green.svg)](#)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 
-**Bagged IG 树对「下一个预算问题」投票，而不只对 y 投票。** 给定硬特征预算，森林沿每棵树走到第一个未观测节点，按信息增益加权聚合后提问；预测复用 jevtree 的共享 predictor，保证和单树 AFA 表可比。
+**Bagged IG 树对「下一个预算问题」投票，而不只对 y 投票。**
 
 ```text
 FeatureTable / 表格行
         ↓ 全训练集冻结 quantile bins
-   T 棵 bootstrap IG 树（可选 max_features）
+   T 棵 bootstrap IG 树
         ↓ act()：path-walk + ig_weighted 投票
-   下一个要买的特征  →  预算用尽后 predict()
+   下一个要买的特征
+        ↓ 预算用尽
+      predict() + 可选 trace
 ```
 
-**当前可运行的是表格 AFA。** `jevforest decide` 和 few-shot any2jevclass（一句话合成 Jev 规则）仍是规划，不要当成已交付能力。可选的 [Jev Decisions 客户端](#jev-decisions-api) 只封装 OpenRouter 类型化问答，不实现规则合成。
+```mermaid
+flowchart LR
+  A["tabular rows"] --> B[freeze bins]
+  B --> C["T IG trees"]
+  C --> D["act: path-walk vote"]
+  D --> E["predict at budget"]
+```
 
-评测数字见 [docs/RESULTS.md](docs/RESULTS.md)。MiniBooNE 在共享 `logistic_impute` 下 Acc@10=0.856，高于同协议的 jevtree Disc/IG_static；Acc@5 仍落后 Disc。Cube Acc@3=1.0 是饱和烟雾测试，不是方法证据。
+依赖 sibling [`jevtree`](https://github.com/qzqdz/jevtree) 的协议与 predictor。`jevforest decide` 尚未实现。
 
-## 安装
+---
 
-需要 sibling [`../jevtree`](../jevtree)（同版本协议与 predictor）。
+## 五分钟上手
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ../jevtree
 pip install -e .
-```
 
-可选：复制 `.env.example` 为 `.env`，填 `OPENROUTER_API_KEY`（仅 Jev 客户端需要）。
+# 一键 cube 烟雾
+./scripts/quickstart.sh
 
-## 五分钟
-
-```bash
-python -m jevforest version
+# 或手动评测
 python -m jevforest eval-afa --config configs/eval_cube_forest.json
 ```
 
-MiniBooNE 公平表（与 jevtree 同一 `logistic_impute`，数据缓存 `data/cache/`）：
+MiniBooNE 公平表（与 jevtree 同一 `logistic_impute`）：
 
 ```bash
 python -m jevforest eval-afa --config configs/eval_miniboone_forest_logistic.json
 ```
 
-多 seed 抽样可靠性：
+多 seed 抽样：
 
 ```bash
-python scripts/sample_reliability.py --dataset miniboone --seeds 0,1,2 \
-  --vote ig_weighted --max-features sqrt
+python scripts/sample_reliability.py --dataset miniboone --seeds 0,1,2
 ```
 
-## 算法
+产物在 `results/<dataset>_ig_forest_<timestamp>/`：
 
-1. 在全训练集上冻结 `bin_edges_`，再 bootstrap + `max_features` 长 T 棵 `IGDecisionTreeGrower`。
-2. `act()`：每棵树从根走到第一个未观测节点；默认 `vote=ig_weighted`（票数 × 全局 IG）。平票再按特征名。OOB 加权作为可选项，低预算上未通过消融。
-3. 评测 `predict()` 走共享 jevtree predictor；产品 `predict()` 用叶子 `counts` 软投票。
-4. T=1 且 `max_features=all`、`bootstrap=False` 时，与单棵 IG 树预测对齐。
-
-配置入口：`configs/eval_cube_forest.json`、`configs/eval_miniboone_forest_logistic.json`。
-
-## 结果摘要（锁定配置）
-
-MiniBooNE seed=0，`n_train=2000`，`n_test=500`，T=16，`sqrt`，`ig_weighted`：
-
-| Budget | Forest Acc | Forest F1 | jevtree Disc Acc |
-|-------:|-----------:|----------:|-----------------:|
-| 5 | 0.798 | 0.659 | 0.824 |
-| 10 | 0.856 | 0.797 | 0.820 |
-| 20 | 0.878 | 0.840 | 0.814 |
-| 40 | 0.894 | 0.867 | 0.828 |
-
-3-seed Acc@10 = 0.845±0.010；Acc@40 = 0.885±0.008。完整表、CI、消融与复现命令见 [docs/RESULTS.md](docs/RESULTS.md)。
-
-## Jev Decisions API
-
-Jev（`~typesafe/jev-latest`）回答关于 state 的类型化问题：noul（是/否概率）、choice、score。工作流由调用方代码拥有。需要 OpenRouter key：
-
-```python
-import os
-from jevforest.sdk.jev import JevDecisionsClient
-
-client = JevDecisionsClient()  # reads OPENROUTER_API_KEY
-decision = client.decide(
-    "Help! My payouts have been failing for 3 days.",
-    {
-        "is_urgent": {
-            "type": "noul",
-            "instructions": "Does this message convey urgency?",
-            "criteria": {"true": "Explicitly time-sensitive", "false": "No urgency expressed"},
-        },
-        "department": {
-            "type": "choice",
-            "instructions": "Which team should handle this?",
-            "criteria": {
-                "billing": "Payments, invoicing, refunds",
-                "technical": "Bugs, outages, integrations",
-                "sales": "Pricing, upgrades, new accounts",
-            },
-        },
-    },
-)
-print(decision.get("answers"))
-```
-
-这不是 `jevforest decide`，也不训练森林。模型卡：[TypeSafe Jev Latest](https://openrouter.ai/typesafe/jev-latest)。
-
-## 状态与路线
-
-| 能力 | 状态 |
+| 文件 | 内容 |
 |------|------|
-| `eval-afa` / `ForestAcquisitionPolicy` | 可用 |
-| 多 seed 抽样脚本 | 可用 |
-| `JevDecisionsClient` | 可用（需 API key） |
-| `jevforest decide` / SDK `decide()` | 未实现 |
-| few-shot any2jevclass / 一句话建规则 | 规划中，未实现 |
+| `summary.json` | Acc / F1 @ budget |
+| `episodes.jsonl` | 逐条获取序列 |
 
-## 测试
+## CLI
 
 ```bash
-python -m pytest -q
+jevforest eval-afa --config configs/…   # 硬预算 AFA
+jevforest version
+jevforest decide                        # 未实现
 ```
 
-## License
+## 评测结果
 
-MIT. 见 [LICENSE](LICENSE).
+MiniBooNE 上 forest 从 budget 10 起超过 jevtree Disc / IG_static；Acc@5 仍落后 Disc。Cube Acc@3 饱和，不作方法证据。完整表、CI 与消融见 [`docs/RESULTS.md`](docs/RESULTS.md)。
+
+### MiniBooNE · Acc@budget（seed 0，logistic_impute）
+
+| Budget | Forest (`ig_weighted`) | Disc | IG_static | Random |
+|-------:|-----------------------:|-----:|----------:|-------:|
+| 5 | 0.798 | **0.824** | 0.814 | 0.746 |
+| 10 | **0.856** | 0.820 | 0.822 | 0.766 |
+| 20 | **0.878** | 0.814 | 0.822 | 0.760 |
+| 40 | **0.894** | 0.828 | 0.814 | 0.800 |
+
+### Cube · Acc@3
+
+| Policy | Acc@3 |
+|--------|------:|
+| `ig_forest` | 1.000 |
+| jevtree `ig_static` | 1.000 |
+| jevtree `sequential` | 1.000 |
+| jevtree `random` | 0.766 |
+
+## 环境
+
+Python ≥ 3.11。评测不需要 LLM。可选 Jev 客户端读取 `.env` 中的 `OPENROUTER_API_KEY`（模型默认 `~typesafe/jev-latest`），只做类型化 noul / choice / score，不替代 `eval-afa`。
+
+更多脚本说明见 [`examples/README.md`](examples/README.md)。
