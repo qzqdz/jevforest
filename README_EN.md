@@ -3,7 +3,6 @@
 Language: [中文](README.md) | English
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
-[![pytest](https://img.shields.io/badge/tests-pytest-green.svg)](#)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 
 **Bagged IG trees that vote on the next budgeted question, not only on y.**
@@ -56,12 +55,7 @@ Multi-seed sampling:
 python scripts/sample_reliability.py --dataset miniboone --seeds 0,1,2
 ```
 
-Outputs land in `results/<dataset>_ig_forest_<timestamp>/`:
-
-| File | Contents |
-|------|----------|
-| `summary.json` | Acc / F1 @ budget |
-| `episodes.jsonl` | Per-episode acquisition traces |
+Outputs land in `results/<dataset>_ig_forest_<timestamp>/`. Sample: [`results/sample/cube_eval_summary.json`](results/sample/cube_eval_summary.json).
 
 ## CLI
 
@@ -73,7 +67,7 @@ jevforest decide                        # not implemented
 
 ## Benchmark results
 
-On MiniBooNE, forest leads jevtree Disc / IG_static from budget 10; Acc@5 still trails Disc. Cube Acc@3 is saturated and is not method evidence. Full tables, CIs and ablations: [`docs/RESULTS.md`](docs/RESULTS.md).
+On MiniBooNE, forest leads jevtree Disc / IG_static from budget 10; Acc@5 still trails Disc. Cube Acc@3 is saturated and is not method evidence.
 
 ### MiniBooNE · Acc@budget (seed 0, logistic_impute)
 

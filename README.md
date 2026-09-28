@@ -3,7 +3,6 @@
 语言: 中文 | [English](README_EN.md)
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
-[![pytest](https://img.shields.io/badge/tests-pytest-green.svg)](#)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 
 **Bagged IG 树对「下一个预算问题」投票，而不只对 y 投票。**
@@ -56,12 +55,7 @@ python -m jevforest eval-afa --config configs/eval_miniboone_forest_logistic.jso
 python scripts/sample_reliability.py --dataset miniboone --seeds 0,1,2
 ```
 
-产物在 `results/<dataset>_ig_forest_<timestamp>/`：
-
-| 文件 | 内容 |
-|------|------|
-| `summary.json` | Acc / F1 @ budget |
-| `episodes.jsonl` | 逐条获取序列 |
+产物在 `results/<dataset>_ig_forest_<timestamp>/`。样例输出见 [`results/sample/cube_eval_summary.json`](results/sample/cube_eval_summary.json)。
 
 ## CLI
 
@@ -73,7 +67,7 @@ jevforest decide                        # 未实现
 
 ## 评测结果
 
-MiniBooNE 上 forest 从 budget 10 起超过 jevtree Disc / IG_static；Acc@5 仍落后 Disc。Cube Acc@3 饱和，不作方法证据。完整表、CI 与消融见 [`docs/RESULTS.md`](docs/RESULTS.md)。
+MiniBooNE 上 forest 从 budget 10 起超过 jevtree Disc / IG_static；Acc@5 仍落后 Disc。Cube Acc@3 饱和，不作方法证据。
 
 ### MiniBooNE · Acc@budget（seed 0，logistic_impute）
 
