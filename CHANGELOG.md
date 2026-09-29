@@ -1,14 +1,14 @@
 # Changelog
 
-## 0.1.0 — 2026-09-28
+## 0.1.0 — 2026-09-29
 
-First public snapshot of tabular forest AFA.
+Public snapshot: tabular forest AFA plus N0–N4 JevClass path.
 
 - `ForestAcquisitionPolicy` / `IGDecisionForestGrower`: bagged IG trees, frozen train bins, path-walk acquisition.
-- Default acquisition vote: `ig_weighted` (votes × global IG). `plurality` and `oob` remain available.
-- `jevforest eval-afa` for cube and MiniBooNE (shared jevtree predictor).
-- `scripts/sample_reliability.py`: multi-seed sampling + episode bootstrap CI.
-- `JevDecisionsClient`: OpenRouter Decisions API wrapper (`OPENROUTER_API_KEY`). Does not implement `decide`.
-- Documented MiniBooNE seed-0 Acc@10 = 0.856 vs jevtree Disc 0.820 under the same protocol.
+- Default acquisition vote: `ig_weighted`. MiniBooNE seed-0 Acc@10 = 0.856 vs jevtree Disc 0.820.
+- N0–N4: v2 DAG runtime, `author` / `run` / `eval-synth`, frozen-evaluator search, 0/1/3/5-shot isolation.
+- Default synthesis provider is `stub_keyword` (pipeline consistency, not live Jev quality). `--provider live` uses OpenRouter.
+- `JevDecisionsClient` for typed noul / choice / score.
 
-Not in this release: `jevforest decide`, any2jevclass / one-sentence rule synthesis.
+Not in this release: `jevforest decide`.
+

@@ -35,8 +35,11 @@ _tmp_*
 results/*
 !results/.gitkeep
 !results/.gitignore
-/data/cache/
+!results/sample/
+!results/sample/**
 
+/docs/
+/tests/
 docs-private/
 .omc/
 .pytest_cache/
