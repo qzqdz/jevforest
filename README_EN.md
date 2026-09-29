@@ -1,11 +1,26 @@
-# jevforest
+<div align="center">
 
-Language: [中文](README.md) | English
+<h1>jevforest</h1>
+
+**Bagged IG trees vote on the next budgeted question; a one-sentence goal freezes to a JevClass DAG.**
+
+[中文](README.md) | English
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 
-**Bagged IG trees vote on the next budgeted question; a one-sentence goal freezes to a JevClass DAG.**
+[Quickstart](#five-minute-quickstart) · [CLI](#cli) · [Benchmarks](#benchmark-results) · [Environment](#environment)
+
+</div>
+
+The project has two paths: tabular AFA acquires features within a budget; JevClass authors and executes a frozen DAG from a goal and a few examples.
+
+![jevforest tabular AFA: train an information-gain forest, acquire features through path-based proposals and weighted voting, then classify with a shared predictor when acquisition stops](assets/jevforest-overview.png)
+
+The figure shows the **tabular AFA branch**: acquire features within budget, then pass acquired values and the observation mask to a shared predictor when acquisition stops. JevClass is a separate goal-driven DAG path and is not shown here. [View full-size image](assets/jevforest-overview.png)
+
+<details>
+<summary>Expand the text and flow diagrams for both paths</summary>
 
 ```text
 tabular AFA                      JevClass
@@ -28,6 +43,8 @@ flowchart LR
     F --> G[run + receipt]
   end
 ```
+
+</details>
 
 AFA needs sibling [`jevtree`](https://github.com/qzqdz/jevtree). `jevforest decide` is not implemented. `eval-synth` defaults to a stub; those accuracies are pipeline consistency, not live Jev quality.
 

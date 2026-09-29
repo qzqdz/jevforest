@@ -1,11 +1,26 @@
-# jevforest
+<div align="center">
 
-语言: 中文 | [English](README_EN.md)
+<h1>jevforest</h1>
+
+**Bagged IG 树对下一个预算问题投票；一句话目标可冻结成 JevClass DAG。**
+
+中文 | [English](README_EN.md)
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 
-**Bagged IG 树对下一个预算问题投票；一句话目标可冻结成 JevClass DAG。**
+[快速上手](#五分钟上手) · [CLI](#cli) · [评测结果](#评测结果) · [环境](#环境)
+
+</div>
+
+项目包含两条路径：表格 AFA 在预算内逐步获取特征；JevClass 从目标与少量示例生成并执行冻结 DAG。
+
+![jevforest 表格 AFA：离线训练信息增益森林，通过路径提议与加权投票逐步获取特征，停止获取后由共享预测器分类](assets/jevforest-overview.png)
+
+图示为**表格 AFA 分支**：在预算内循环获取特征，停止时将已获取的特征值和观测掩码交给共享预测器。JevClass 是另一条目标驱动的 DAG 路径，未在此图中展示。[查看原图](assets/jevforest-overview.png)
+
+<details>
+<summary>展开两条路径的文字与流程图</summary>
 
 ```text
 表格 AFA                         JevClass
@@ -28,6 +43,8 @@ flowchart LR
     F --> G[run + receipt]
   end
 ```
+
+</details>
 
 AFA 依赖 sibling [`jevtree`](https://github.com/qzqdz/jevtree)。`jevforest decide` 仍未实现。`eval-synth` 默认 stub，Acc 只说明流水线自洽，不是 live Jev 质量。
 
