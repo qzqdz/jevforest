@@ -29,6 +29,7 @@ def main() -> int:
             reports.append(report)
             print(
                 f"shot={shot} seed={seed}  "
+                f"direct={report['methods']['direct_choice']['test']['accuracy_all']:.3f}  "
                 f"author={report['methods']['author_once']['test']['accuracy_all']:.3f}  "
                 f"search={report['methods']['search']['test']['accuracy_all']:.3f}"
             )

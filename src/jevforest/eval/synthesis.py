@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Literal
 
-from jevforest.author import author_once
+from jevforest.author import author_once, direct_choice_spec
 from jevforest.contract import TaskContract
 from jevforest.data.shots import assert_disjoint, load_jsonl, take_k
 from jevforest.runtime.pipeline import PipelineRuntime
@@ -64,18 +64,18 @@ def eval_task(
         labels=contract.labels,
         task_id=contract.task_id,
         oracle=False,
+        jev=jev,
     )
-    direct = author_once(
-        contract.goal,
-        examples=support_k,
-        labels=contract.labels,
-        task_id=contract.task_id + "_direct",
-        oracle=False,
-    )
-    # "direct" uses the generic single-choice template by tweaking goal? Keep same author for structure;
-    # the runtime still asks Jev once per instance. Distinction is search vs author-once vs author-once.
+    from jevforest.artifact import freeze_jevclass
 
+    direct_jc = freeze_jevclass(
+        contract=contract,
+        spec=direct_choice_spec(contract.goal, contract.labels),
+        verification="unverified",
+        source={"method": "direct_choice", "n_examples": len(support_k)},
+    )
     methods: dict[str, Any] = {
+        "direct_choice": direct_jc,
         "author_once": authored,
     }
     if run_search:

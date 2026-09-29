@@ -52,6 +52,14 @@ def adapt_json(obj: dict[str, Any], *, source: str = "user") -> dict[str, Any]:
     return {"text": str(text), "payload": obj, "evidence": [{"source": source, "kind": "json"}]}
 
 
+def adapt_document(path: str | Path, *, source: str = "document", max_chars: int = 8000) -> dict[str, Any]:
+    text = Path(path).read_text(encoding="utf-8")[:max_chars]
+    return {
+        "text": text,
+        "evidence": [{"source": source, "kind": "document", "path": str(path), "truncated": len(text) >= max_chars}],
+    }
+
+
 def adapt_table_row(row: dict[str, Any], *, text_fields: list[str] | None = None, source: str = "table") -> dict[str, Any]:
     fields = text_fields or [k for k, v in row.items() if isinstance(v, str)]
     text = " | ".join(f"{k}={row[k]}" for k in fields if k in row)
