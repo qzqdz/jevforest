@@ -11,9 +11,9 @@ from collections.abc import Callable
 from typing import Any
 
 from jevforest.artifact import freeze_jevclass
-from jevforest.author import author_once, ticket_routing_spec
+from jevforest.author import author_once
 from jevforest.contract import TaskContract
-from jevforest.runtime.pipeline import PipelineRuntime
+from jevforest.runtime.pipeline import PipelineExecutionError, PipelineRuntime
 from jevforest.spec.validate import spec_hash, validate_spec
 
 Evaluator = Callable[[dict[str, Any], list[dict[str, Any]]], dict[str, Any]]
@@ -32,7 +32,11 @@ def accuracy_evaluator(jevclass: dict[str, Any], rows: list[dict[str, Any]], *, 
     n = 0
     for row in rows:
         obs = {"text": row["text"]} if "text" in row else row
-        out = rt.run(obs)
+        try:
+            out = rt.run(obs)
+        except PipelineExecutionError:
+            n += 1
+            continue
         n += 1
         if out["abstain"]:
             abstain += 1
@@ -52,19 +56,19 @@ def accuracy_evaluator(jevclass: dict[str, Any], rows: list[dict[str, Any]], *, 
 
 def _mutate(spec: dict[str, Any], i: int) -> dict[str, Any]:
     s = copy.deepcopy(spec)
-    if i == 0:
+    if i % 4 == 1:
         s["abstain_when"] = "False"
-    elif i == 1:
-        s = ticket_routing_spec(abstain_lo=0.35, abstain_hi=0.65)
-    elif i == 2:
-        s = ticket_routing_spec(abstain_lo=0.0, abstain_hi=0.0)
-        s["abstain_when"] = "False"
-    else:
-        # drop urgency node if present
+        s.pop("abstain_when", None)
+    elif i % 4 == 2:
         s["nodes"] = [n for n in s["nodes"] if n.get("id") != "urgent"]
         s.pop("abstain_when", None)
-        if not any(n.get("id") == "decision" for n in s["nodes"]):
-            s["output"] = s.get("output") or "nodes['dept']['department']['choice']"
+    elif i % 4 == 3:
+        # rebuild from seed labels if present
+        s["abstain_when"] = "False"
+    else:
+        s.pop("abstain_when", None)
+    if "abstain_when" in s and s["abstain_when"] == "False":
+        s.pop("abstain_when", None)
     return validate_spec(s)
 
 

@@ -1,0 +1,17 @@
+{
+  "task_id": "ticket_routing",
+  "provider": "live:~typesafe/jev-latest",
+  "model": "typesafe/jev-1.13-20260917",
+  "shot": 0,
+  "seed": 0,
+  "n_test": 8,
+  "n_support_used": 0,
+  "test_hash": "33dc0871ee2325f8",
+  "sealed": true,
+  "search_live": false,
+  "methods": {
+    "direct_choice": {"accuracy_all": 1.0, "coverage": 1.0, "answered_accuracy": 1.0, "n": 8},
+    "author_once": {"accuracy_all": 1.0, "coverage": 1.0, "answered_accuracy": 1.0, "n": 8}
+  },
+  "caveat": "n=8 easy keyword tickets; not a large-task generalization claim. Search was not billed on live Jev."
+}

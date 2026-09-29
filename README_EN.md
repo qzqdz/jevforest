@@ -67,7 +67,18 @@ jevforest decide                        # not implemented
 
 ## Benchmark results
 
-On MiniBooNE, forest leads jevtree Disc / IG_static from budget 10; Acc@5 still trails Disc. Cube Acc@3 is saturated and is not method evidence. Sample: [`results/sample/cube_eval_summary.json`](results/sample/cube_eval_summary.json).
+On MiniBooNE, forest leads jevtree Disc / IG_static from budget 10; Acc@5 still trails Disc. Cube Acc@3 is saturated. Sample: [`results/sample/cube_eval_summary.json`](results/sample/cube_eval_summary.json).
+
+### Live Jev · sealed ticket test (n=8, shot=0)
+
+Provider `~typesafe/jev-latest` (ran as `typesafe/jev-1.13-20260917`). `author_once` builds a DAG from the goal sentence, then scores the **held-out** `test.jsonl`. n is tiny; this is a live smoke, not a large-task claim.
+
+| Method | Acc | Coverage | n |
+|--------|----:|---------:|--:|
+| `direct_choice` | 1.000 | 1.000 | 8 |
+| `author_once` (goal→spec) | 1.000 | 1.000 | 8 |
+
+Summary: [`results/sample/n4_live_ticket_summary.json`](results/sample/n4_live_ticket_summary.json). Search was not billed on live Jev.
 
 ### MiniBooNE · Acc@budget (seed 0, logistic_impute)
 

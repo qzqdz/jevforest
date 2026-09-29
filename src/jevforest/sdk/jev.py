@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 import urllib.error
 import urllib.request
 from typing import Any
@@ -43,9 +44,10 @@ class JevDecisionsClient:
         api_key: str | None = None,
         model: str | None = None,
         url: str = DEFAULT_URL,
-        timeout: float = 30.0,
+        timeout: float = 60.0,
         referer: str | None = None,
         title: str | None = None,
+        retries: int = 4,
     ) -> None:
         self.api_key = api_key if api_key is not None else os.environ.get(ENV_API_KEY, "")
         self.model = model or os.environ.get(ENV_MODEL, DEFAULT_MODEL)
@@ -53,6 +55,7 @@ class JevDecisionsClient:
         self.timeout = float(timeout)
         self.referer = referer
         self.title = title
+        self.retries = int(retries)
 
     def decide(self, state: Any, questions: dict[str, Any]) -> dict[str, Any]:
         if not self.api_key:
@@ -69,23 +72,27 @@ class JevDecisionsClient:
             headers["HTTP-Referer"] = self.referer
         if self.title:
             headers["X-Title"] = self.title
-        req = urllib.request.Request(self.url, data=data, headers=headers, method="POST")
-        try:
-            with urllib.request.urlopen(req, timeout=self.timeout) as resp:
-                raw = resp.read().decode("utf-8")
-                status = getattr(resp, "status", 200)
-        except urllib.error.HTTPError as exc:
-            body = exc.read().decode("utf-8", errors="replace")
-            raise JevDecisionsError(f"HTTP {exc.code}: {body[:500]}") from exc
-        except urllib.error.URLError as exc:
-            raise JevDecisionsError(f"request failed: {exc}") from exc
-        try:
-            parsed = json.loads(raw)
-        except json.JSONDecodeError as exc:
-            raise JevDecisionsError(f"non-JSON response ({status}): {raw[:300]}") from exc
-        if not isinstance(parsed, dict):
-            raise JevDecisionsError(f"expected object, got {type(parsed)}")
-        return parsed
+        last: Exception | None = None
+        for attempt in range(max(1, self.retries)):
+            req = urllib.request.Request(self.url, data=data, headers=headers, method="POST")
+            try:
+                with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+                    raw = resp.read().decode("utf-8")
+                    status = getattr(resp, "status", 200)
+                parsed = json.loads(raw)
+                if not isinstance(parsed, dict):
+                    raise JevDecisionsError(f"expected object, got {type(parsed)}")
+                return parsed
+            except urllib.error.HTTPError as exc:
+                body = exc.read().decode("utf-8", errors="replace")
+                last = JevDecisionsError(f"HTTP {exc.code}: {body[:500]}")
+                if exc.code < 500 and exc.code != 429:
+                    raise last from exc
+            except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError) as exc:
+                last = JevDecisionsError(f"request failed: {exc}")
+            time.sleep(min(8.0, 0.5 * (2 ** attempt)))
+        assert last is not None
+        raise last
 
 
 __all__ = [

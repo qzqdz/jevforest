@@ -67,7 +67,18 @@ jevforest decide                        # 未实现
 
 ## 评测结果
 
-MiniBooNE 上 forest 从 budget 10 起超过 jevtree Disc / IG_static；Acc@5 仍落后 Disc。Cube Acc@3 饱和，不作方法证据。样例输出：[`results/sample/cube_eval_summary.json`](results/sample/cube_eval_summary.json)。
+MiniBooNE 上 forest 从 budget 10 起超过 jevtree Disc / IG_static；Acc@5 仍落后 Disc。Cube Acc@3 饱和，不作方法证据。样例：[`results/sample/cube_eval_summary.json`](results/sample/cube_eval_summary.json)。
+
+### Live Jev · 封存工单测试（n=8，shot=0）
+
+Provider `~typesafe/jev-latest`（实测 `typesafe/jev-1.13-20260917`）。一句话 `author_once` 从 goal 抽出标签并冻结 DAG，再在 **未见过的 test.jsonl** 上跑。n 很小，只证明这条任务上 live Jev 能跑通，不是大规模泛化。
+
+| Method | Acc | Coverage | n |
+|--------|----:|---------:|--:|
+| `direct_choice` | 1.000 | 1.000 | 8 |
+| `author_once`（goal→spec） | 1.000 | 1.000 | 8 |
+
+摘要：[`results/sample/n4_live_ticket_summary.json`](results/sample/n4_live_ticket_summary.json)。Search 未在 live 上计费。
 
 ### MiniBooNE · Acc@budget（seed 0，logistic_impute）
 
