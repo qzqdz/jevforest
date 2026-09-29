@@ -16,7 +16,7 @@ FeatureTable / 表格行
    下一个要买的特征  →  预算用尽后 predict()
 ```
 
-**当前可运行的是表格 AFA。** `jevforest decide` 和 few-shot any2jevclass（一句话合成 Jev 规则）仍是规划，不要当成已交付能力。可选的 [Jev Decisions 客户端](#jev-decisions-api) 只封装 OpenRouter 类型化问答，不实现规则合成。
+**表格 AFA 仍可用。** N0–N4 JevClass 路径已落地：`author` / `run` / `eval-synth`（默认 stub provider）。`jevforest decide` 仍未实现。stub 上 Acc=1.0 只说明流水线自洽，不是 live Jev 质量。详见 [docs/N0N4.md](docs/N0N4.md)。
 
 评测数字见 [docs/RESULTS.md](docs/RESULTS.md)。MiniBooNE 在共享 `logistic_impute` 下 Acc@10=0.856，高于同协议的 jevtree Disc/IG_static；Acc@5 仍落后 Disc。Cube Acc@3=1.0 是饱和烟雾测试，不是方法证据。
 
@@ -37,6 +37,11 @@ pip install -e .
 ```bash
 python -m jevforest version
 python -m jevforest eval-afa --config configs/eval_cube_forest.json
+
+# N0–N4: 一句话生成并跑一张工单（stub，无需 API）
+python -m jevforest author --goal "Route support tickets to billing technical sales" --out results/authored.json
+python -m jevforest run --jevclass results/authored.json --input '{"text":"Please refund the payout"}'
+python -m jevforest eval-synth --task-dir examples/tasks/tickets --shot 0
 ```
 
 MiniBooNE 公平表（与 jevtree 同一 `logistic_impute`，数据缓存 `data/cache/`）：

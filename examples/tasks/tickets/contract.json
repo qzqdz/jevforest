@@ -1,0 +1,11 @@
+{
+  "task_id": "ticket_routing",
+  "goal": "Route support tickets to billing, technical, sales, or other queues. Abstain when urgency is unclear.",
+  "labels": ["billing", "technical", "sales", "other"],
+  "input_schema": {"text": "string"},
+  "unknown_policy": "abstain",
+  "success": "predicted queue matches independent keyword oracle on the sealed test split",
+  "evidence": "labels in jsonl are the oracle; Jev/stub answers are not",
+  "build_budget": {"max_iterations": 4, "max_jev_calls": 80, "max_seconds": 60},
+  "run_budget": {"max_jev_calls": 8, "max_ms": 30000}
+}

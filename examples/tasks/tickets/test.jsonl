@@ -1,0 +1,8 @@
+{"id": "t1", "text": "Please refund the payout that failed yesterday.", "label": "billing"}
+{"id": "t2", "text": "Billing invoice looks wrong, double charge.", "label": "billing"}
+{"id": "t3", "text": "The bug in your API caused an outage.", "label": "technical"}
+{"id": "t4", "text": "Integration error after we called the API.", "label": "technical"}
+{"id": "t5", "text": "Sales: can we upgrade and discuss pricing?", "label": "sales"}
+{"id": "t6", "text": "Looking for a quote on a new plan.", "label": "sales"}
+{"id": "t7", "text": "Nice weather today.", "label": "other"}
+{"id": "t8", "text": "FYI I changed my email signature.", "label": "other"}

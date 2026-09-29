@@ -1,0 +1,5 @@
+{"id": "s1", "text": "My payouts have been failing for 3 days, refund please.", "label": "billing"}
+{"id": "s2", "text": "The API integration returns 500 after the last deploy.", "label": "technical"}
+{"id": "s3", "text": "Can I upgrade to the enterprise plan and get a quote?", "label": "sales"}
+{"id": "s4", "text": "Just saying hi, no issue.", "label": "other"}
+{"id": "s5", "text": "Invoice charged twice this month.", "label": "billing"}

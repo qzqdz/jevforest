@@ -1,0 +1,8 @@
+{"id": "d1", "text": "Urgent: checkout payments failing right now.", "label": "billing"}
+{"id": "d2", "text": "Production outage, the bug crashed the worker.", "label": "technical"}
+{"id": "d3", "text": "What is the price of the upgrade?", "label": "sales"}
+{"id": "d4", "text": "Thanks for the newsletter.", "label": "other"}
+{"id": "d5", "text": "Need a refund on last charge.", "label": "billing"}
+{"id": "d6", "text": "Webhook error from the API.", "label": "technical"}
+{"id": "d7", "text": "New account sales question about plans.", "label": "sales"}
+{"id": "d8", "text": "Hello from the parking lot.", "label": "other"}

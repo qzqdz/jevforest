@@ -241,18 +241,82 @@ def cmd_version(_: argparse.Namespace) -> int:
 def cmd_decide(_: argparse.Namespace) -> int:
     print(
         "jevforest decide: not implemented. "
-        "Use jevforest eval-afa for forest AFA, or JevDecisionsClient for typed Jev questions.",
+        "Use jevforest run for a frozen JevClass, eval-afa for forest AFA, "
+        "or JevDecisionsClient for typed Jev questions.",
         file=sys.stderr,
     )
     return 2
+
+
+def _provider(name: str):
+    from jevforest.providers import LiveJevProvider, StubKeywordProvider
+
+    if name == "live":
+        return LiveJevProvider()
+    return StubKeywordProvider()
+
+
+def cmd_run(args: argparse.Namespace) -> int:
+    from jevforest.artifact import make_receipt
+    from jevforest.runtime.pipeline import PipelineRuntime
+    from jevforest.spec.validate import validate_spec
+
+    path = Path(args.spec or args.jevclass)
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if payload.get("kind") == "JevClass":
+        spec = payload["spec"]
+        jevclass = payload
+    else:
+        spec = validate_spec(payload)
+        jevclass = {"spec_hash": None, "jevclass_hash": None, "verification": "valid", "spec": spec}
+    obs = json.loads(args.input) if args.input.lstrip().startswith("{") else {"text": args.input}
+    rt = PipelineRuntime(spec, _provider(args.provider), max_jev_calls=int(args.max_jev_calls))
+    run = rt.run(obs)
+    receipt = make_receipt(jevclass, run, mode="fresh" if args.provider == "live" else "stub")
+    print(json.dumps({"run": {"output": run["output"], "abstain": run["abstain"], "stop_reason": run["stop_reason"]}, "receipt": receipt}, indent=2, ensure_ascii=False, default=str))
+    return 0
+
+
+def cmd_author(args: argparse.Namespace) -> int:
+    from jevforest.author import author_once
+
+    examples = []
+    if args.examples:
+        examples = json.loads(Path(args.examples).read_text(encoding="utf-8"))
+    art = author_once(args.goal, examples=examples, task_id=args.task_id)
+    out = Path(args.out or "results/authored.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(art, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"wrote {out}  verification={art['verification']}  spec_hash={art['spec_hash'][:12]}")
+    return 0
+
+
+def cmd_eval_synth(args: argparse.Namespace) -> int:
+    from jevforest.eval.synthesis import eval_task
+
+    report = eval_task(
+        args.task_dir,
+        jev=_provider(args.provider),
+        shot=int(args.shot),
+        seed=int(args.seed),
+        run_search=not args.no_search,
+    )
+    out = Path(args.out or "results/n4_report.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"wrote {out}")
+    for name, m in report["methods"].items():
+        t = m["test"]
+        print(f"  {name:12} test_acc={t['accuracy_all']:.3f}  cov={t['coverage']:.3f}  verified={m['verification']}")
+    return 0
 
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="jevforest",
         description=(
-            "jevforest — bagged IG trees that vote on the next budgeted question. "
-            "Scoring: jevforest eval-afa --config configs/eval_cube_forest.json"
+            "jevforest — bagged IG AFA plus JevClass author/run/eval. "
+            "AFA: eval-afa. Jev: author / run / eval-synth."
         ),
     )
     sub = p.add_subparsers(dest="command", required=True)
@@ -260,6 +324,30 @@ def build_parser() -> argparse.ArgumentParser:
     e = sub.add_parser("eval-afa", help="AFA hard-budget eval (config-driven)")
     e.add_argument("--config", required=False, help="Eval JSON config")
     e.set_defaults(func=cmd_eval_afa)
+
+    r = sub.add_parser("run", help="Run a v2 spec or frozen JevClass")
+    r.add_argument("--spec", help="Pipeline spec JSON")
+    r.add_argument("--jevclass", help="Frozen JevClass JSON")
+    r.add_argument("--input", required=True, help="Observation JSON or raw text")
+    r.add_argument("--provider", default="stub", choices=["stub", "live"])
+    r.add_argument("--max-jev-calls", default=8, type=int)
+    r.set_defaults(func=cmd_run)
+
+    a = sub.add_parser("author", help="Author-once JevClass from a goal")
+    a.add_argument("--goal", required=True)
+    a.add_argument("--examples", help="JSON list of at most 5 support rows")
+    a.add_argument("--task-id", default="authored")
+    a.add_argument("--out", default="results/authored.json")
+    a.set_defaults(func=cmd_author)
+
+    s = sub.add_parser("eval-synth", help="Sealed few-shot synthesis eval (N4)")
+    s.add_argument("--task-dir", required=True)
+    s.add_argument("--shot", default=0, type=int, choices=[0, 1, 3, 5])
+    s.add_argument("--seed", default=0, type=int)
+    s.add_argument("--provider", default="stub", choices=["stub", "live"])
+    s.add_argument("--no-search", action="store_true")
+    s.add_argument("--out", default="results/n4_report.json")
+    s.set_defaults(func=cmd_eval_synth)
 
     d = sub.add_parser("decide", help="Product decide (not implemented)")
     d.set_defaults(func=cmd_decide)

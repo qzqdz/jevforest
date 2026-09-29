@@ -26,6 +26,7 @@ Thumbs.db
 /logs/
 *.log
 *.jsonl
+!examples/**/*.jsonl
 
 _test_*.py
 _tmp_*
