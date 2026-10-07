@@ -9,7 +9,7 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 
-[快速上手](#五分钟上手) · [CLI](#cli) · [评测结果](#评测结果) · [环境](#环境)
+[快速上手](#五分钟上手) · [CLI](#cli) · [评测结果](#评测结果) · [环境](#环境) · [GBoosting (JevGBoost)](https://github.com/qzqdz/jevgboost)
 
 </div>
 
